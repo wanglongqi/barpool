@@ -4,7 +4,7 @@ class PoolInfo {
         if (intervals instanceof Array) {
             this.intervals = intervals.map(x => parseInt(x)).filter(x => !isNaN(x));
         } else {
-            this.intervals = [parseInt(intervals)]
+            this.intervals = [parseInt(intervals)].filter(x => !isNaN(x));
         }
     }
 }
@@ -16,17 +16,18 @@ class OHLCPool {
             if (this.symbols.has(pi.symbol)) {
                 pi.intervals.forEach(x => this.symbols.get(pi.symbol).add(x));
             } else {
-                this.symbols.set(pi.symbol, new Set(pi.intervals));
+                if (pi.intervals.length > 0)
+                    this.symbols.set(pi.symbol, new Set(pi.intervals));
             }
         }
     }
-    _resampleOne(symbol){
+    _resampleOne(symbol) {
 
     }
-    update(symbol, data){
+    update(symbol, data) {
 
     }
-    get(symbol, interval){
+    get(symbol, interval) {
 
     }
 }

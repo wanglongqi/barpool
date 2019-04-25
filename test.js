@@ -3,7 +3,9 @@ let { PoolInfo, OHLCPool } = require('./index.js');
 
 var pis = [new PoolInfo('USDJPY', [1, 5, 30, 60]),
     new PoolInfo('USDSGD', [5, 10]),
-    new PoolInfo('USDSGD', 30)
+    new PoolInfo('USDSGD', 30),
+    new PoolInfo('USDSGD', 'spam'),
+    new PoolInfo('USDSGD', [5, '60'])
 ];
 
 var op = new OHLCPool('data', pis);
