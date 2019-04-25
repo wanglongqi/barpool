@@ -20,14 +20,14 @@ class OHLCPool {
             }
         }
     }
-    resampleOne(){
+    _resampleOne(symbol){
 
     }
     update(symbol, data){
 
     }
     get(symbol, interval){
-      
+
     }
 }
 
