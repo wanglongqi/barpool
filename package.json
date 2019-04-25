@@ -1,0 +1,23 @@
+{
+  "name": "barpool",
+  "version": "1.0.0",
+  "description": "maintain multiple intervals OHLC bar based on 1 min interval bar ",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/wanglongqi/barpool.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wanglongqi/barpool/issues"
+  },
+  "homepage": "https://github.com/wanglongqi/barpool#readme",
+  "devDependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1"
+  }
+}
