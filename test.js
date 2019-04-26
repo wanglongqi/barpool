@@ -26,11 +26,16 @@ var p = new Promise((resolve, reject) => {
     var op = new OHLCPool(barData, pis);
     console.log(op.pool);
 
-    op.update('USDJPY', [1, 1, 2, 3, 4]);
+    op.update('USDJPY', 99, [1, 1, 2, 3, 4]);
+    console.log("USDJPY 5 min bars:");
     console.log(op.get('USDJPY', 5));
+    console.log("USDJPY 7 min bars:");
     console.log(op.get('USDJPY', 7));
+    console.log("USDJPY 30 min bars:");
     console.log(op.get('USDJPY', 30));
+    console.log("USDJPY 60 min bars:");
     console.log(op.get('USDJPY', 60));
+    console.log("USDCHF 5 min bars:");
     console.log(op.get('USDCHF', 5));
 }).then(() => console.log("Test succeed."),
     console.error));
