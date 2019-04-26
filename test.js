@@ -8,8 +8,8 @@ var pis = [new PoolInfo('USDJPY', [1, 5, 30, 60]),
     new PoolInfo('USDSGD', [5, '60'])
 ];
 
-var op = new OHLCPool('data', pis);
-console.log(op.symbols);
+var op = new OHLCPool({ "USDJPY": [] }, pis);
+console.log(op.pool);
 
 op.update('USDJPY', [1, 1, 2, 3, 4]);
 console.log(op.get('USDJPY', 5));
