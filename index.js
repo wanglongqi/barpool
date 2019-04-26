@@ -39,33 +39,36 @@ class OHLCPool {
                     var begin = moment(data[0][0]).utc().startOf("day").toDate().getTime();
                     begin += Math.ceil((data[0][0] - begin) / interval) * interval * 60 * 1000;
                     out.begin = begin;
-                    var o = 0,
-                        h = 0,
-                        l = 0,
-                        c = 0,
+                    var o = data[0][1],
+                        h = data[0][2],
+                        l = data[0][3],
+                        c = data[0][4],
+                        v = data[0][5] ? undefined : 0,
                         last = begin;
                     for (let bar of data) {
-                        let dt = bar[0];
+                        var dt = bar[0];
                         if (dt < begin) {
                             continue;
                         } else {
                             if ((dt - last) >= interval) {
-                                if (c !== 0) out.push([last, o, h, l, c]);
+                                if (c !== 0) out.push([last, o, h, l, c, v]);
                                 while (last + interval <= dt)
                                     last += interval;
                                 o = bar[1];
                                 h = bar[2];
                                 l = bar[3];
                                 c = bar[4];
+                                v = bar[5] ? undefined : 0;
                             } else {
                                 if (bar[2] > h) h = bar[2];
                                 if (bar[3] < l) l = bar[3];
                                 c = bar[4];
+                                v += bar[5] ? undefined : 0;
                             }
                         }
                     }
                     // add immature bar here
-                    if (dt >= last) out.push([last, o, h, l, c]);
+                    if (dt >= last) out.push([last, o, h, l, c, v]);
                     return out;
                 }
 
