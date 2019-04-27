@@ -49,19 +49,21 @@ class OHLCPool {
             if (typeof data[0][0] === "number") {
                 interval = interval * 60 * 1000;
                 var begin = moment(data[0][0]).utc().startOf("day").toDate().getTime();
-                begin += Math.ceil((data[0][0] - begin) / interval) * interval * 60 * 1000;
+                begin += Math.ceil((data[0][0] - begin) / interval) * interval;
                 out.begin = begin;
-                var o = data[0][1],
-                    h = data[0][2],
-                    l = data[0][3],
-                    c = data[0][4],
-                    v = data[0][5] ? undefined : 0,
-                    last = begin;
+                var o, h, l, c, v, last = begin;
                 for (let bar of data) {
                     var dt = bar[0];
                     if (dt < begin) {
                         continue;
                     } else {
+                        if (c === undefined) {
+                            o = bar[1];
+                            h = bar[2];
+                            l = bar[3];
+                            c = bar[4];
+                            v = 0;
+                        };
                         if ((dt - last) >= interval) {
                             if (c !== 0) out.push([last, o, h, l, c, v]);
                             while (last + interval <= dt)
@@ -70,12 +72,12 @@ class OHLCPool {
                             h = bar[2];
                             l = bar[3];
                             c = bar[4];
-                            v = bar[5] ? undefined : 0;
+                            v = bar[5] ? bar[5] : 0;
                         } else {
                             if (bar[2] > h) h = bar[2];
                             if (bar[3] < l) l = bar[3];
                             c = bar[4];
-                            v += bar[5] ? undefined : 0;
+                            v += bar[5] ? bar[5] : 0;
                         }
                     }
                 }
@@ -120,17 +122,24 @@ class OHLCPool {
         try {
             var bars = this.pool.get(symbol).get(interval);
             if (bars.length == 0) {
-                // do not have previous bar
+                // do not have previous bar, this should not happen. But we
+                // also make partial support here.
+                console.log('historical data not found, please consider add more historical data.');
                 var last = bars.begin;
-                while (last + interval <= data[0])
+                while (last + interval < data[0])
                     last += interval;
-                bars.push([last,
-                    data[1],
-                    data[2],
-                    data[3],
-                    data[4],
-                    data[5] ? undefined : 0
-                ]);
+                // only push if the bar start time match with one begin time, for completeness 
+                // of bar content, but this may lead to missing starting bars for illiquid data.
+                // For illiquid data, historical data should be passed in advance.
+                // Do NOT make hot start for illiquid data.
+                if (last == data[0])
+                    bars.push([last,
+                        data[1],
+                        data[2],
+                        data[3],
+                        data[4],
+                        data[5] ? data[5] : 0
+                    ]);
             } else {
                 // has previous bar
                 var bar = bars[bars.length - 1];
@@ -138,7 +147,7 @@ class OHLCPool {
                     h = bar[2],
                     l = bar[3],
                     c = bar[4],
-                    v = bar[5] ? undefined : 0,
+                    v = bar[5] ? bar[5] : 0,
                     last = bar[0];
                 interval = interval * 60 * 1000;
                 if (data[0] >= last + interval) {
@@ -149,13 +158,13 @@ class OHLCPool {
                         data[2],
                         data[3],
                         data[4],
-                        data[5] ? undefined : 0
+                        data[5] ? data[5] : 0
                     ]);
                 } else {
-                    if (data[2] > h) h = data[2];
-                    if (data[3] < l) l = data[3];
-                    c = data[4];
-                    v += data[5] ? undefined : 0;
+                    if (data[2] > h) bar[2] = data[2];
+                    if (data[3] < l) bar[3] = data[3];
+                    bar[4] = data[4];
+                    bar[5] += data[5] ? data[5] : 0;
                 }
             };
         } catch (err) {
