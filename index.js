@@ -149,6 +149,8 @@ class OHLCPool {
                     c = bar[4],
                     v = bar[5] ? bar[5] : 0,
                     last = bar[0];
+                if (data[0] < last)
+                    throw (`update data @${new Date(data[0])} should newer than historical data @ ${new Date(last)}.`)
                 interval = interval * 60 * 1000;
                 if (data[0] >= last + interval) {
                     while (last + interval <= data[0])

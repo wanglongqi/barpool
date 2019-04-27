@@ -26,7 +26,7 @@ var p = new Promise((resolve, reject) => {
     var op = new OHLCPool(barData, pis);
     console.log(op.pool);
 
-    op.update('USDJPY', 99, [1, 1, 2, 3, 4]);
+    op.update('USDJPY', [1, 1, 2, 3, 4], 5);
     console.log("USDJPY 5 min bars:");
     console.log(op.get('USDJPY', 5));
     console.log("USDJPY 7 min bars:");
