@@ -1,6 +1,7 @@
 # barpool
 Maintain a pool of multiple intervals OHLC bars.
 
+Please check tests in the folder for usage.
 
 ## Possible problems
 
