@@ -88,11 +88,33 @@ class OHLCPool {
         out.begin = moment().utc().startOf("day").toDate().getTime();
         return out;
     }
-    addInterval(symbol, barData) {
-
+    addInterval(symbol, interval, barData) {
+        // object
+        if (barData.hasOwnProperty(symbol))
+            barData = barData[symbol];
+        // map
+        if (barData.has(symbol))
+            barData = barData.get(symbol);
+        // barData is Array now
+        bars = this.resampleOne(barData, symbol, interval);
+        if (!this.pool.has(symbol))
+            this.pool.set(symbol, new Map());
+        this.pool.get(symbol).set(interval, bars);
     }
     removeInterval(symbol, interval) {
-
+        if (this.pool.has(symbol))
+            return this.pool.get(symbol).delete(interval);
+        console.error(`${symbol} not presented in pool`);
+        return false;
+    }
+    updatePool(symbol, data) {
+        if (this.pool.has(symbol)) {
+            for (var interval of this.pool.get(symbol).keys())
+                this.update(symbol, data, interval);
+            return true;
+        }
+        console.error(`${symbol} not presented in pool`);
+        return false;
     }
     update(symbol, data, interval) {
         try {
@@ -136,7 +158,7 @@ class OHLCPool {
                     v += data[5] ? undefined : 0;
                 }
             };
-        } catch(err) {
+        } catch (err) {
             console.error("Symbol or interval not presented in pool.");
             console.error(err);
         }
