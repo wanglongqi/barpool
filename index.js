@@ -95,10 +95,10 @@ class OHLCPool {
         if (barData.hasOwnProperty(symbol))
             barData = barData[symbol];
         // map
-        if (barData.has(symbol))
+        if (barData.__proto__.hasOwnProperty('has') && barData.has(symbol))
             barData = barData.get(symbol);
         // barData is Array now
-        bars = this.resampleOne(barData, symbol, interval);
+        var bars = this.resampleOne(barData, symbol, interval);
         if (!this.pool.has(symbol))
             this.pool.set(symbol, new Map());
         this.pool.get(symbol).set(interval, bars);
