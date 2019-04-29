@@ -174,6 +174,17 @@ class OHLCPool {
             console.error(err);
         }
     }
+    downdate(symbol, data, interval) {
+        //only consider a special case, where the last new data is newer than pool.begin
+        var cache = this.pool.get(symbol).get(interval);
+        if (data[data.length - 1][0] >= cache.begin && data[0][0] < cache.begin) {
+            var bars = this.resampleOne(data, symbol, interval).filter(x => (x[0] < cache.begin));
+            this.pool.get(symbol).set(interval, bars.concat(cache));
+        } else {
+            console.log(data[data.length - 1][0] >= cache.begin ? "You have new old data?" : "Last new data newer than begin of old data?");
+        }
+
+    }
     get(symbol, interval) {
         try {
             var out = this.pool.get(symbol).get(interval);

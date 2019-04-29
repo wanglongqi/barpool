@@ -55,3 +55,14 @@ for (var i = 250; i < 300; i++) {
 console.log("add more data");
 updateData3["Test"].forEach(x => op.updatePool("Test", x));
 console.log(op.get("Test", 30));
+
+
+console.log('test downdate')
+op.addInterval("Test", 20, updateData);
+console.log(op.get("Test", 20));
+var data = { "Test": [] };
+for (var i = 0; i < 150; i++) {
+    data["Test"].push([now + i * 60 * 1000, i, i + 1, i - 1, i + 0.5, 1]);
+}
+op.downdate("Test", data["Test"], 20);
+console.log(op.get("Test", 20));
